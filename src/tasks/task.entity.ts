@@ -37,4 +37,7 @@ export class Task {
     onDelete: 'SET NULL',
   })
   assignee?: User | null;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  assigned_at?: Date | null;
 }

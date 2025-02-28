@@ -16,9 +16,20 @@ export class TasksService {
     return this.tasksRepository.find();
   }
 
-  createTask(title: string, description?: string, status?: string) {
+  async createTask(
+    title: string,
+    description?: string,
+    status?: string,
+    assigneeEmail?: string,
+  ) {
     const task = this.tasksRepository.create({ title, description, status });
-    return this.tasksRepository.save(task);
+    const savedTask = await this.tasksRepository.save(task);
+
+    if (assigneeEmail) {
+      await this.assignTaskToUser(savedTask.id, assigneeEmail);
+    }
+
+    return savedTask;
   }
 
   getTaskByTitle(title: string) {
@@ -50,9 +61,8 @@ export class TasksService {
     const user = await this.userService.findByEmail(assignee);
     if (!user) throw new Error('User not found');
 
-    console.log('task found : ', task);
     task.assignee = user;
-    console.log('task assigned : ', task);
+    task.assigned_at = new Date();
     await this.tasksRepository.save(task);
   }
 
