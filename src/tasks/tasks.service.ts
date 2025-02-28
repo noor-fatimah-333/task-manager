@@ -2,18 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './task.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
+import { TaskEventsGateway } from '../task-events/task-events.gateway';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private tasksRepository: Repository<Task>,
     private userService: UsersService,
+    private taskEventsGateway: TaskEventsGateway,
   ) {}
 
   getAllTasks() {
-    return this.tasksRepository.find();
+    return this.tasksRepository.find({ relations: ['assignee'] });
   }
 
   async createTask(
@@ -39,31 +40,43 @@ export class TasksService {
   }
 
   getTaskByTitle(title: string) {
-    return this.tasksRepository.findOne({ where: { title } });
+    return this.tasksRepository.findOne({
+      where: { title },
+      relations: ['assignee'],
+    });
   }
 
   getTaskById(id: number) {
-    return this.tasksRepository.findOne({ where: { id } });
+    return this.tasksRepository.findOne({
+      where: { id },
+      relations: ['assignee'],
+    });
   }
 
   deleteTaskById(id: number) {
     return this.tasksRepository.delete(id);
   }
 
-  updateTask(
+  async updateTask(
     id: number,
     title: string,
     description?: string,
     status?: string,
     due_date?: Date,
   ) {
-    return this.tasksRepository.update(id, {
+    await this.tasksRepository.update(id, {
       title,
       description,
       status,
       due_date,
       updated_at: new Date(),
     });
+    const updatedTask = await this.tasksRepository.findOne({ where: { id } });
+
+    if (updatedTask) {
+      this.taskEventsGateway.notifyTaskUpdated(updatedTask);
+    }
+    return updatedTask;
   }
   async assignTaskToUser(taskId: number, assignee: string): Promise<void> {
     const task = await this.getTaskById(taskId);

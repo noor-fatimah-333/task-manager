@@ -1,12 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  ManyToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from 'src/users/user.entity';
-import { IsOptional } from 'class-validator';
 
 @Entity()
 export class Task {
@@ -35,12 +28,12 @@ export class Task {
   })
   updated_at: Date;
 
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  assigned_at?: Date | null;
+
   @ManyToOne(() => User, (user) => user.tasks, {
     nullable: true,
     onDelete: 'SET NULL',
   })
   assignee?: User | null;
-
-  @Column({ type: 'timestamp', nullable: true, default: null })
-  assigned_at?: Date | null;
 }

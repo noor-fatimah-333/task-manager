@@ -5,9 +5,11 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventsModule } from './task-events/task-events.module';
 
 @Module({
   imports: [
+    EventsModule,
     UsersModule,
     AuthModule,
     TasksModule,
