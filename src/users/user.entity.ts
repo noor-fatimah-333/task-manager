@@ -7,13 +7,19 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Task } from 'src/tasks/task.entity';
+import { IsEmail, IsOptional } from 'class-validator';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @IsOptional()
+  @Column({ nullable: true })
+  name: string;
+
   @Column({ unique: true })
+  @IsEmail()
   email: string;
 
   @Column()
@@ -24,6 +30,16 @@ export class User {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @OneToMany(() => Task, (task) => task.user)
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
+
+  @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
 }

@@ -48,4 +48,17 @@ export class TasksController {
     const { title, description, status } = updateTaskDto;
     return this.tasksService.updateTask(id, title, description, status);
   }
+
+  @Patch(':id/assign')
+  async assignTaskToUsers(
+    @Param('id') id: number,
+    @Body('assignee') assignee: string,
+  ): Promise<void> {
+    return this.tasksService.assignTaskToUser(id, assignee);
+  }
+
+  @Patch(':taskId/unassign')
+  async unassignTask(@Param('taskId') taskId: number) {
+    return this.tasksService.unassignTask(taskId);
+  }
 }

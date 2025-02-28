@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+} from 'typeorm';
 import { User } from 'src/users/user.entity';
+import { IsOptional } from 'class-validator';
 
 @Entity()
 export class Task {
@@ -15,6 +22,19 @@ export class Task {
   @Column({ default: 'Not Started' })
   status?: string;
 
-  @ManyToOne(() => User, (user) => user.tasks, { eager: true }) // Ensuring relation fetches user details
-  user?: User;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
+
+  @ManyToOne(() => User, (user) => user.tasks, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  assignee?: User | null;
 }

@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { User } from 'src/users/user.entity';
 
 export class CreateTaskDto {
   @IsString()
@@ -13,5 +14,5 @@ export class CreateTaskDto {
   status?: string; // You can set a default value in the service if not provided
 
   @IsOptional()
-  userId?: number; // Reference to the user assigned to the task
+  assignee?: User | null; // Reference to the user assigned to the task
 }
