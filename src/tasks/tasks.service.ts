@@ -20,9 +20,15 @@ export class TasksService {
     title: string,
     description?: string,
     status?: string,
+    due_date?: Date,
     assigneeEmail?: string,
   ) {
-    const task = this.tasksRepository.create({ title, description, status });
+    const task = this.tasksRepository.create({
+      title,
+      description,
+      status,
+      due_date,
+    });
     const savedTask = await this.tasksRepository.save(task);
 
     if (assigneeEmail) {
@@ -44,11 +50,18 @@ export class TasksService {
     return this.tasksRepository.delete(id);
   }
 
-  updateTask(id: number, title: string, description?: string, status?: string) {
+  updateTask(
+    id: number,
+    title: string,
+    description?: string,
+    status?: string,
+    due_date?: Date,
+  ) {
     return this.tasksRepository.update(id, {
       title,
       description,
       status,
+      due_date,
       updated_at: new Date(),
     });
   }

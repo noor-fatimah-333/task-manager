@@ -19,12 +19,14 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
   @Post('create')
   async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    const { title, description, status, assigneeEmail } = createTaskDto;
+    const { title, description, status, assigneeEmail, due_date } =
+      createTaskDto;
 
     return this.tasksService.createTask(
       title,
       description,
       status,
+      due_date,
       assigneeEmail,
     );
   }
@@ -50,8 +52,14 @@ export class TasksController {
   }
   @Patch(':id')
   updateTask(@Param('id') id: number, @Body() updateTaskDto: CreateTaskDto) {
-    const { title, description, status } = updateTaskDto;
-    return this.tasksService.updateTask(id, title, description, status);
+    const { title, description, status, due_date } = updateTaskDto;
+    return this.tasksService.updateTask(
+      id,
+      title,
+      description,
+      status,
+      due_date,
+    );
   }
 
   @Patch(':id/assign')

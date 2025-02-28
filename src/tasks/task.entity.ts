@@ -25,6 +25,9 @@ export class Task {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  due_date?: Date | null;
+
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',

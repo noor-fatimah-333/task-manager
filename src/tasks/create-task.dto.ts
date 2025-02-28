@@ -13,6 +13,9 @@ export class CreateTaskDto {
   @IsOptional() // This field is optional, default value can be handled in the service
   status?: string; // You can set a default value in the service if not provided
 
+  @IsOptional()
+  due_date?: Date;
+
   @IsString()
   @IsOptional()
   assigneeEmail?: string;
