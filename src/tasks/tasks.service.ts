@@ -69,15 +69,12 @@ export class TasksService {
       description,
       status,
       due_date,
-      updated_at: new Date(),
     });
     const updatedTask = await this.getTaskById(id);
 
     if (updatedTask) {
-      console.log('task updated in repository : ', updatedTask);
       const assignedUserId = updatedTask?.assignee?.id;
       if (assignedUserId) {
-        console.log('sending notification');
         this.taskEventsGateway.notifyUserTaskUpdated(
           assignedUserId,
           updatedTask,

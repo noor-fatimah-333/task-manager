@@ -22,8 +22,6 @@ export class UsersService {
     const newUser = this.usersRepository.create({
       email,
       password,
-      created_at: new Date(),
-      updated_at: new Date(),
     });
     return this.usersRepository.save(newUser);
   }

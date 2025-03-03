@@ -19,7 +19,7 @@ import { EventsModule } from './task-events/task-events.module';
       port: 5432,
       username: 'postgres',
       password: 'postgres',
-      database: 'task_manager',
+      database: 'tasks_manager',
       autoLoadEntities: true,
       synchronize: true,
     }),
