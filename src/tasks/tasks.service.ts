@@ -71,10 +71,18 @@ export class TasksService {
       due_date,
       updated_at: new Date(),
     });
-    const updatedTask = await this.tasksRepository.findOne({ where: { id } });
+    const updatedTask = await this.getTaskById(id);
 
     if (updatedTask) {
-      this.taskEventsGateway.notifyTaskUpdated(updatedTask);
+      console.log('task updated in repository : ', updatedTask);
+      const assignedUserId = updatedTask?.assignee?.id;
+      if (assignedUserId) {
+        console.log('sending notification');
+        this.taskEventsGateway.notifyUserTaskUpdated(
+          assignedUserId,
+          updatedTask,
+        );
+      }
     }
     return updatedTask;
   }

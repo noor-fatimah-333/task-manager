@@ -1,19 +1,22 @@
 import { io } from 'socket.io-client';
 
-// Connect to the WebSocket server
-const socket = io('http://localhost:3000'); // Replace with your actual backend URL
+// Replace 'http://localhost:3000' with your backend WebSocket URL
+const userId = 5; // Simulate logged-in user
+const socket = io('http://localhost:3000', {
+  query: { userId }, // Send userId during connection
+});
 
 // Handle successful connection
 socket.on('connect', () => {
-  console.log('✅ Connected to WebSocket server:', socket.id);
+  console.log(`✅ Connected to WebSocket server as User ${userId}:`, socket.id);
 });
 
-// Listen for 'taskUpdated' event
+// Listen for task updates
 socket.on('taskUpdated', (task) => {
-  console.log('🆕 Task Updated:', task);
+  console.log(`🔔 Task Updated for User ${userId}:`, task);
 });
 
 // Handle disconnection
 socket.on('disconnect', () => {
-  console.log('❌ Disconnected from WebSocket server');
+  console.log(`❌ Disconnected from WebSocket server`);
 });
