@@ -9,15 +9,15 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'noor.fatima@codedistrict.com',
-        pass: 'dyoi cbiu afvh dbwy',
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.MAIL_PASSWORD,
       },
     });
   }
 
   async sendTaskReminder(email: string, taskTitle: string, dueDate: Date) {
     const mailOptions = {
-      from: 'noor.fatima@codedistrict.com',
+      from: process.env.SENDER_EMAIL,
       to: email,
       subject: 'Task Reminder',
       text: `Reminder: Your task "${taskTitle}" is due on ${dueDate.toDateString()}.`,

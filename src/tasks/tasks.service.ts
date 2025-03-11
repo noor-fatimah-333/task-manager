@@ -130,7 +130,6 @@ export class TasksService {
   }
 
   async sendDueDateReminders() {
-    console.log('finding upcoming due dates');
     const upcomingTasks = await this.tasksRepository.find({
       where: {
         due_date: Between(

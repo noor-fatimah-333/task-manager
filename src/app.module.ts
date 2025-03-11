@@ -10,9 +10,11 @@ import { NotificationController } from './notifications/notification.controller'
 import { EmailService } from './notifications/email.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notifications/notification.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
     EventsModule,
     UsersModule,
