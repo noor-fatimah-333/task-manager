@@ -1,11 +1,5 @@
-import {
-  MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { io } from 'socket.io-client';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class TaskEventsGateway {

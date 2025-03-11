@@ -6,13 +6,19 @@ import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsModule } from './task-events/task-events.module';
+import { NotificationController } from './notifications/notification.controller';
+import { EmailService } from './notifications/email.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationModule } from './notifications/notification.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     EventsModule,
     UsersModule,
     AuthModule,
     TasksModule,
+    NotificationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,7 +30,7 @@ import { EventsModule } from './task-events/task-events.module';
       synchronize: true,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, NotificationController],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}

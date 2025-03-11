@@ -52,13 +52,15 @@ export class TasksController {
   }
   @Patch(':id')
   updateTask(@Param('id') id: number, @Body() updateTaskDto: CreateTaskDto) {
-    const { title, description, status, due_date } = updateTaskDto;
+    const { title, description, status, due_date, assigneeEmail } =
+      updateTaskDto;
     return this.tasksService.updateTask(
       id,
       title,
       description,
       status,
       due_date,
+      assigneeEmail,
     );
   }
 

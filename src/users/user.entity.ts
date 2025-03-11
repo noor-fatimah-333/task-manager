@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Task } from 'src/tasks/task.entity';
+import { Notification } from 'src/notifications/notification.entity';
 import { IsEmail, IsOptional } from 'class-validator';
 
 @Entity()
@@ -40,4 +41,7 @@ export class User {
 
   @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 }
