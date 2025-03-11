@@ -35,4 +35,11 @@ export class NotificationService {
       order: { createdAt: 'DESC' },
     });
   }
+  async markAsRead(notificationId: number) {
+    return this.notificationRepo.update(notificationId, { isRead: true });
+  }
+  async markAllAsRead(userId: number) {
+    return this.notificationRepo.update({ user: { id: userId } }, { isRead: true });
+  }
+
 }

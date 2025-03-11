@@ -3,7 +3,6 @@ import { Task } from './task.entity';
 import { Between, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from '../users/users.service';
-import { TaskEventsGateway } from '../task-events/task-events.gateway';
 import { NotificationService } from 'src/notifications/notification.service';
 import { EmailService } from 'src/notifications/email.service';
 import { Cron } from '@nestjs/schedule';
@@ -15,7 +14,6 @@ export class TasksService {
     @InjectRepository(Task) private tasksRepository: Repository<Task>,
     private userService: UsersService,
     private emailService: EmailService,
-    private taskEventsGateway: TaskEventsGateway,
     private notificationService: NotificationService,
   ) {}
 

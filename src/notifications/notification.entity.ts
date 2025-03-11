@@ -16,7 +16,7 @@ export class Notification {
   message: string;
 
   @Column()
-  type: string; // e.g., 'task_assigned', 'task_updated'
+  type: string; // e.g., 'task_assigned', 'task_updated', 'task_due'
 
   @ManyToOne(() => User, (user) => user.notifications, { onDelete: 'CASCADE' })
   user: User;
