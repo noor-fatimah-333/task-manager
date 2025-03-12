@@ -7,10 +7,15 @@ import { UsersModule } from '../users/users.module';
 import { EventsModule } from 'src/task-events/task-events.module';
 import { EmailService } from 'src/notifications/email.service';
 import { NotificationModule } from 'src/notifications/notification.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Task]),
+    CacheModule.register({
+      ttl: 300, // Cache TTL in seconds
+      max: 100, // Maximum cache items
+    }),
     UsersModule,
     EventsModule,
     NotificationModule,

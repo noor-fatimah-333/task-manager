@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './task.entity';
 import { Between, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,11 +7,13 @@ import { NotificationService } from 'src/notifications/notification.service';
 import { EmailService } from 'src/notifications/email.service';
 import { Cron } from '@nestjs/schedule';
 import { User } from 'src/users/user.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private tasksRepository: Repository<Task>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private userService: UsersService,
     private emailService: EmailService,
     private notificationService: NotificationService,
@@ -50,11 +52,23 @@ export class TasksService {
     });
   }
 
-  getTaskById(id: number) {
-    return this.tasksRepository.findOne({
-      where: { id },
-      relations: ['assignee'],
-    });
+  async getTaskById(id: number): Promise<Task> {
+    const cacheKey = `task-${id}`;
+    const cachedTask = await this.cacheManager.get<Task>(cacheKey);
+    if (cachedTask) {
+      return cachedTask;
+    } else {
+      const task = await this.tasksRepository.findOne({
+        where: { id },
+        relations: ['assignee'],
+      });
+      if (task) {
+        await this.cacheManager.set(cacheKey, task);
+        return task;
+      } else {
+        throw new NotFoundException(`Task with ID ${id} not found`);
+      }
+    }
   }
 
   deleteTaskById(id: number) {
@@ -81,6 +95,9 @@ export class TasksService {
       due_date,
       assignee,
     });
+    const cacheKey = `task-${id}`;
+    await this.cacheManager.del(cacheKey);
+
     const updatedTask = await this.getTaskById(id);
 
     if (updatedTask) {
